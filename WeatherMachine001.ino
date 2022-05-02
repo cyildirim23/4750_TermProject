@@ -35,24 +35,36 @@ void loop() {
     Serial.println(F("Failed to read from DHT sensor"));
     return;
   }
-  Serial.print("H ");
-  Serial.print(h);
-  Serial.print("\n");
-  Serial.print("T ");
-  Serial.print(t);
-  Serial.print("\n");
-  delay(2001);
+ 
   // ESP32 Code part
     if ((Serial2.available() > 1) && (SerialBT.available() == 0))
     {
+      Serial.println("I am if");
       readChar = Serial2.readString(); 
       SerialBT.print(readChar);
       Serial.print(readChar);
     }
     else if (SerialBT.available() > 1) {
+      Serial.println("I am else if");
       BTreadChar = SerialBT.readString();
       Serial.print(BTreadChar);
     }
     delay(1000);
-    
+  //if {
+//  Serial.print("Humidity: ");
+  //Serial.print(h);
+  //Serial.print("% \n");
+//  Serial.print("Temperature: ");
+ // Serial.print(t);
+ // Serial.print("C \n");
+ // delay(2000);
+ // }while (readChar == "1")
+  
+  
+  
 }
+
+//float DHT_temp(float temp, float humid){
+  
+  
+//}
