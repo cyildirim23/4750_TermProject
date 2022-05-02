@@ -64,12 +64,16 @@ void loop() {
   OledDisplay();
 }
 
-
-void BTread(){      //
+void BTread(){          // Starting point / Reset of enum
   if(CmdState !=BT_RESET){
-  Serial.println("I am returning to loop..");
   return;
   }
+  oled.clearDisplay();
+  oled.setCursor(0,0);
+  oled.setTextSize(1);
+  oled.setTextColor(WHITE);
+  oled.print("Waiting on command");
+  oled.display();
   if(SerialBT.available() >1){
     BTreadChar = SerialBT.read();
     Serial.print(BTreadChar);
@@ -88,7 +92,6 @@ void BTread(){      //
 void Tempread(){
   if(CmdState !=BT_START)
   {
-    Serial.println("I am returning to loop from Tempread");
     return;
   }  
     float h = dht.readHumidity();
@@ -108,6 +111,7 @@ void Tempread(){
     oled.setCursor(0,10);
     oled.print("Humidity: ");
     oled.print(h);
+    oled.print(" %");
     oled.display();
    
     // Displaying Data on Serial Monitor
@@ -117,7 +121,7 @@ void Tempread(){
     Serial.print("Temperature: ");
     Serial.print(t);
     Serial.print("C \n");
-    delay(2000);
+    delay(1500);
 
     // Interrupt via Phone commands
     if(SerialBT.available() >1){
@@ -126,12 +130,12 @@ void Tempread(){
     if(BTreadChar == '0')
     {
       CmdState = BT_STOP;
-      delay(2000);
+      delay(500);
     }
     if(BTreadChar == '2')
       {
         CmdState = BT_RESET;
-        delay(2000);
+        delay(500);
       }
     if(BTreadChar == '3')
     {
@@ -142,8 +146,6 @@ void Tempread(){
 
 void OledDisplay(){
   if(CmdState != BT_STOP){
-    Serial.println("I am returning to loop from Display");
-    delay(1000);
     return;
   }
   oled.setTextColor(WHITE);
@@ -152,7 +154,7 @@ void OledDisplay(){
   oled.print("Paused...");
   oled.println("Waiting for command");
   oled.display();
-  delay(1500);
+  delay(1000);
   
   // Interrupt via Phone commands
   if(SerialBT.available() >1){
@@ -162,12 +164,12 @@ void OledDisplay(){
     {
       CmdState = BT_START;
       SerialBT.print("Collecting Data...");
-      delay(2000);
+      delay(1000);
     }
     if(BTreadChar == '2')
       {
         CmdState = BT_RESET;
-        delay(2000);
+        delay(1000);
       }
    }
 }
@@ -177,19 +179,17 @@ float displayPrompt(float H, float T){
   if((T >=70.01) && (T<=74.00))
   {
     SerialBT.println("It's chilly!");
-    delay(2000);
+    delay(1000);
   }
   else if ((T>=74.01) || (H >=61.00))
   {
     SerialBT.println("It's hot...");
-    delay(2000);
+    delay(1000);
   }
   else
   {
     SerialBT.println("Are we up North???");
-    delay(2000);
+    delay(1000);
   }
- 
   return 0;
 }
-
